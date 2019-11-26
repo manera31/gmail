@@ -1,5 +1,6 @@
 package com.joanmanera.gmaildos;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,6 +13,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.navigation.NavigationView;
+import com.joanmanera.gmaildos.fragments.FragmentMail;
 import com.joanmanera.gmaildos.fragments.FragmentRecived;
 import com.joanmanera.gmaildos.fragments.FragmentSent;
 import com.joanmanera.gmaildos.fragments.FragmentSend;
@@ -24,10 +26,9 @@ import com.joanmanera.gmaildos.models.Mail;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, IMailListener {
 
     private Account account;
-    private ArrayList<Contact> contacts;
     private ArrayList<Mail> mails;
 
     @Override
@@ -38,8 +39,7 @@ public class MainActivity extends AppCompatActivity
         GmailParser parser = new GmailParser(this);
         if (parser.parse()) {
             account = parser.getAccount();
-            contacts = parser.getContacts();
-            mails = parser.getMail();
+            mails = parser.getMails();
 
         }
 
@@ -98,16 +98,19 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_recived) {
-            f = new FragmentRecived();
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, f).commit();
-            setTitle("Cámara");
+            FragmentRecived f1 = new FragmentRecived();
+            f1.setMailsListener(this);
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, f1).commit();
+            setTitle("Recived");
         } else if (id == R.id.nav_sent) {
-            f = new FragmentSent();
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, f).commit();
-            setTitle("Galería");
+            FragmentSent f2 = new FragmentSent();
+            f2.setMailsListener(this);
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, f2).commit();
+            setTitle("Sent");
         } else if (id == R.id.nav_unread) {
-            f = new FragmentUnread();
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, f).commit();
+            FragmentUnread f3 = new FragmentUnread();
+            f3.setMailsListener(this);
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, f3).commit();
             setTitle("Presentación");
         } else if (id == R.id.nav_send) {
             f = new FragmentSend();
@@ -124,8 +127,17 @@ public class MainActivity extends AppCompatActivity
 
         }
 
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onMailSelected(int position) {
+        Mail m = mails.get(position);
+        Intent i = new Intent(this, DetalleActivity.class);
+        i.putExtra(DetalleActivity.EXTRA_TEXTO, m);
+        startActivity(i);
     }
 }

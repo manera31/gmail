@@ -18,11 +18,13 @@ import java.util.ArrayList;
 public class GmailParser {
     private Account account;
     private ArrayList<Contact> contacts;
-    private ArrayList<Mail> mail;
+    private ArrayList<Mail> mails;
     private InputStream mailsFile;
 
     public GmailParser(Context context){
         this.mailsFile = context.getResources().openRawResource(R.raw.correos);
+        contacts = new ArrayList<>();
+        mails = new ArrayList<>();
     }
 
     public boolean parse(){
@@ -36,18 +38,20 @@ public class GmailParser {
             jsonMails = new String(buffer, "UTF-8");
 
             JSONTokener tokener = new JSONTokener(jsonMails);
-            JSONObject objectAcount = new JSONObject(tokener);
-            JSONObject ob2 = objectAcount.getJSONObject("myAccout");
+            JSONArray array = new JSONArray(tokener);
+            JSONObject object = array.getJSONObject(0);
 
-            int id = ob2.getInt("id");
-            String name = ob2.getString("name");
-            String firstSurname = ob2.getString("firstSurname");
-            String email = ob2.getString("email");
+            JSONObject objectAccount = object.getJSONObject("myAccount");
+            int id = objectAccount.getInt("id");
+            String name = objectAccount.getString("name");
+            String firstSurname = objectAccount.getString("firstSurname");
+            String email = objectAccount.getString("email");
 
             account = new Account(id, name, firstSurname, email);
+            contacts.add(new Contact(id, name, firstSurname, email));
 
             //CONTACTOS
-            JSONArray arrayContacts = objectAcount.getJSONArray("contacts");
+            JSONArray arrayContacts = object.getJSONArray("contacts");
             for (int i = 0 ; i < arrayContacts.length() ; i++){
                 JSONObject contactObject = arrayContacts.getJSONObject(i);
                 int idContact;
@@ -71,10 +75,11 @@ public class GmailParser {
                 phone2 = contactObject.getString("phone2");
                 address = contactObject.getString("address");
 
+                contacts.add(new Contact(idContact, nameContact, firstSurnameContact, secondSurnameContact, birth, photo, emailContact, phone1, phone2, address));
             }
 
             //MAILS
-            JSONArray arrayMail = objectAcount.getJSONArray("mails");
+            JSONArray arrayMail = object.getJSONArray("mails");
             for (int i = 0 ; i < arrayMail.length() ; i++){
                 JSONObject mailObject = arrayMail.getJSONObject(i);
                 String from;
@@ -93,6 +98,19 @@ public class GmailParser {
                 readed = mailObject.getBoolean("readed");
                 deleted = mailObject.getBoolean("deleted");
                 spam = mailObject.getBoolean("spam");
+
+                Contact fromContact = null;
+                Contact toContact = null;
+                for (Contact c: contacts) {
+                    if(c.getEmail().equals(from)){
+                        fromContact = c;
+                    }
+                    if(c.getEmail().equals(to)){
+                        toContact = c;
+                    }
+                }
+
+                mails.add(new Mail(fromContact, toContact, subject, body, sentOn, readed, deleted, spam));
             }
             parsed = true;
         } catch (IOException e) {
@@ -110,11 +128,7 @@ public class GmailParser {
         return account;
     }
 
-    public ArrayList<Contact> getContacts() {
-        return contacts;
-    }
-
-    public ArrayList<Mail> getMail() {
-        return mail;
+    public ArrayList<Mail> getMails() {
+        return mails;
     }
 }

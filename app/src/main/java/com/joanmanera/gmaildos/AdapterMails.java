@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.joanmanera.gmaildos.models.Account;
 import com.joanmanera.gmaildos.models.Mail;
 
 import java.util.ArrayList;
@@ -18,16 +19,22 @@ public class AdapterMails extends RecyclerView.Adapter<AdapterMails.MailsViewHol
     private IMailListener listener;
     private ArrayList<Mail> mails;
 
+    public AdapterMails(IMailListener listener, ArrayList<Mail> mails) {
+        this.listener = listener;
+        this.mails = mails;
+    }
+
     @NonNull
     @Override
     public MailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_mail, parent, false);
-        return new MailsViewHolder(parent, listener);
+        return new MailsViewHolder(view, listener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MailsViewHolder holder, int position) {
-
+        Mail mail = mails.get(position);
+        holder.bindMail(mail);
     }
 
     @Override
@@ -35,7 +42,7 @@ public class AdapterMails extends RecyclerView.Adapter<AdapterMails.MailsViewHol
         return mails.size();
     }
 
-    public static class MailsViewHolder extends RecyclerView.ViewHolder implements IMailListener{
+    public static class MailsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private ImageView ivPhoto;
         private TextView tvName;
         private TextView tvSubject;
@@ -47,12 +54,36 @@ public class AdapterMails extends RecyclerView.Adapter<AdapterMails.MailsViewHol
 
         public MailsViewHolder(@NonNull View itemView, IMailListener listener) {
             super(itemView);
+            ivPhoto = itemView.findViewById(R.id.ivPhoto);
+            tvName = itemView.findViewById(R.id.tvName);
+            tvSubject = itemView.findViewById(R.id.tvSubject);
+            tvBody = itemView.findViewById(R.id.tvBody);
+            tvDate = itemView.findViewById(R.id.tvDate);
+            tvHour = itemView.findViewById(R.id.tvHour);
+            this.listener = listener;
+            itemView.setOnClickListener(this);
+        }
+
+        public void bindMail(Mail mail){
+            if(mail.getFrom() != null){
+                tvName.setText(mail.getFrom().getName());
+                tvSubject.setText(mail.getSubject());
+                tvBody.setText(mail.getBody());
+            } else {
+                tvName.setText("aux");
+                tvSubject.setText("aux");
+                tvBody.setText("aux");
+            }
+
+
 
         }
 
         @Override
-        public void onMailSelected(int position) {
-
+        public void onClick(View view) {
+            if(listener != null){
+                listener.onMailSelected(getAdapterPosition());
+            }
         }
     }
 }

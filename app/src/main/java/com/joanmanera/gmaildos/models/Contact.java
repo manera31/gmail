@@ -1,6 +1,8 @@
 package com.joanmanera.gmaildos.models;
 
-public class Contact {
+import java.io.Serializable;
+
+public class Contact implements Serializable {
     private int id;
     private String name;
     private String firstSurname;
@@ -23,6 +25,13 @@ public class Contact {
         this.phone1 = phone1;
         this.phone2 = phone2;
         this.address = address;
+    }
+
+    public Contact(int id, String name, String firstSurname, String email) {
+        this.id = id;
+        this.name = name;
+        this.firstSurname = firstSurname;
+        this.email = email;
     }
 
     public int getId() {

@@ -1,8 +1,10 @@
 package com.joanmanera.gmaildos.models;
 
-public class Mail {
-    private String from;
-    private String to;
+import java.io.Serializable;
+
+public class Mail implements Serializable {
+    private Contact from;
+    private Contact to;
     private String subject;
     private String body;
     private String sentOn;
@@ -10,7 +12,7 @@ public class Mail {
     private boolean deleted;
     private boolean spam;
 
-    public Mail(String from, String to, String subject, String body, String sentOn, boolean readed, boolean deleted, boolean spam) {
+    public Mail(Contact from, Contact to, String subject, String body, String sentOn, boolean readed, boolean deleted, boolean spam) {
         this.from = from;
         this.to = to;
         this.subject = subject;
@@ -21,11 +23,11 @@ public class Mail {
         this.spam = spam;
     }
 
-    public String getFrom() {
+    public Contact getFrom() {
         return from;
     }
 
-    public String getTo() {
+    public Contact getTo() {
         return to;
     }
 
