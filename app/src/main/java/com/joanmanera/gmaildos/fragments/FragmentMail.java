@@ -24,8 +24,8 @@ public class FragmentMail extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detalle, container, false);
 
-        tvFrom = view.findViewById(R.id.tvFrom);
-        tvTo = view.findViewById(R.id.tvTo);
+        tvFrom = view.findViewById(R.id.tvFromMail);
+        tvTo = view.findViewById(R.id.tvToMail);
         tvSubject = view.findViewById(R.id.tvSubjectMail);
         tvBody = view.findViewById(R.id.tvBodyMail);
 
@@ -34,8 +34,13 @@ public class FragmentMail extends Fragment {
 
     public void mostrarDetalle(Mail mail){
 
-        tvFrom.setText(mail.getFrom().getEmail());
-        tvTo.setText(mail.getTo().getEmail());
+        if (mail.getFrom() != null){
+            tvFrom.setText(mail.getFrom().getEmail());
+            tvTo.setText(mail.getTo().getEmail());
+        } else {
+            tvFrom.setText(mail.getUknowMail());
+            tvTo.setText("me");
+        }
         tvSubject.setText(mail.getSubject());
         tvBody.setText(mail.getBody());
     }

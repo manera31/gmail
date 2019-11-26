@@ -101,14 +101,18 @@ public class GmailParser {
 
                 Contact fromContact = null;
                 Contact toContact = null;
+                boolean aux = false;
                 for (Contact c: contacts) {
                     if(c.getEmail().equals(from)){
                         fromContact = c;
+                        aux = true;
                     }
                     if(c.getEmail().equals(to)){
                         toContact = c;
                     }
                 }
+                if (!aux)
+                    mails.add(new Mail(from, subject, body, sentOn, readed, deleted, spam));
 
                 mails.add(new Mail(fromContact, toContact, subject, body, sentOn, readed, deleted, spam));
             }

@@ -8,25 +8,14 @@ public class Account implements Serializable {
     private String name;
     private String firstSurname;
     private String email;
-    private ArrayList<Contact> contacts;
-    private ArrayList<Mail> mails;
 
     public Account(int id, String name, String firstSurname, String email) {
         this.id = id;
         this.name = name;
         this.firstSurname = firstSurname;
         this.email = email;
-        this.contacts = new ArrayList<>();
-        this.mails = new ArrayList<>();
     }
 
-    public void setContacts(ArrayList<Contact> contacts) {
-        this.contacts = contacts;
-    }
-
-    public void setMails(ArrayList<Mail> mails) {
-        this.mails = mails;
-    }
 
     public int getId() {
         return id;
@@ -44,11 +33,13 @@ public class Account implements Serializable {
         return email;
     }
 
-    public ArrayList<Contact> getContacts() {
-        return contacts;
-    }
-
-    public ArrayList<Mail> getMails() {
-        return mails;
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", firstSurname='" + firstSurname + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }

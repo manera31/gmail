@@ -1,5 +1,6 @@
 package com.joanmanera.gmaildos;
 
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,12 +8,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.joanmanera.gmaildos.models.Account;
 import com.joanmanera.gmaildos.models.Mail;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class AdapterMails extends RecyclerView.Adapter<AdapterMails.MailsViewHolder> {
 
@@ -67,16 +71,13 @@ public class AdapterMails extends RecyclerView.Adapter<AdapterMails.MailsViewHol
         public void bindMail(Mail mail){
             if(mail.getFrom() != null){
                 tvName.setText(mail.getFrom().getName());
-                tvSubject.setText(mail.getSubject());
-                tvBody.setText(mail.getBody());
             } else {
-                tvName.setText("aux");
-                tvSubject.setText("aux");
-                tvBody.setText("aux");
+                tvName.setText(mail.getUknowMail());
             }
-
-
-
+            tvSubject.setText(mail.getSubject());
+            tvBody.setText(mail.getBody());
+            tvDate.setText(mail.getDate());
+            tvHour.setText(mail.getHour());
         }
 
         @Override

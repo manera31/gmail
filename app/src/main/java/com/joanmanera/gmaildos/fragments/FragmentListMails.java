@@ -20,23 +20,24 @@ import com.joanmanera.gmaildos.models.Account;
 import com.joanmanera.gmaildos.models.Contact;
 import com.joanmanera.gmaildos.models.Mail;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
-public class FragmentRecived extends Fragment {
+public class FragmentListMails extends Fragment {
     private ArrayList<Mail> mails;
-    private Account account;
     private RecyclerView recyclerView;
     private IMailListener listener;
+
+    public FragmentListMails(ArrayList<Mail> mails) {
+        this.mails = mails;
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        GmailParser parser = new GmailParser(getActivity());
-        if (parser.parse()){
-            this.mails = parser.getMails();
-            this.account = parser.getAccount();
-        }
         return inflater.inflate(R.layout.fragment_mails, container, false);
     }
 
@@ -44,13 +45,7 @@ public class FragmentRecived extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         recyclerView = getView().findViewById(R.id.rvMails);
-        ArrayList<Mail> mailsRecived = new ArrayList<>();
-        for(Mail m: mails){
-            if(m.getFrom() !=  null && !m.getFrom().getEmail().equals(account.getEmail())){
-                mailsRecived.add(m);
-            }
-        }
-        recyclerView.setAdapter(new AdapterMails(listener, mailsRecived));
+        recyclerView.setAdapter(new AdapterMails(listener, mails));
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
     }
 
@@ -58,7 +53,4 @@ public class FragmentRecived extends Fragment {
         this.listener = listener;
     }
 
-    public ArrayList<Mail> getMails(){
-        return mails;
-    }
 }

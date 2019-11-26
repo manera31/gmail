@@ -18,8 +18,8 @@ public class FragmentSend extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_sample, container, false);
-        tvSample = layout.findViewById(R.id.tvSample);
+        View layout = inflater.inflate(R.layout.fragment_detalle, container, false);
+        tvSample = layout.findViewById(R.id.tvBodyMail);
         tvSample.setText("Herramientas");
         return layout;
     }

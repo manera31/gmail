@@ -73,4 +73,20 @@ public class Contact implements Serializable {
     public String getAddress() {
         return address;
     }
+
+    @Override
+    public String toString() {
+        return "Contact{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", firstSurname='" + firstSurname + '\'' +
+                ", secondSurname='" + secondSurname + '\'' +
+                ", birth='" + birth + '\'' +
+                ", photo=" + photo +
+                ", email='" + email + '\'' +
+                ", phone1='" + phone1 + '\'' +
+                ", phone2='" + phone2 + '\'' +
+                ", address='" + address + '\'' +
+                '}';
+    }
 }
