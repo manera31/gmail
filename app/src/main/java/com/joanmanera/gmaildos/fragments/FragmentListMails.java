@@ -45,7 +45,7 @@ public class FragmentListMails extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         recyclerView = getView().findViewById(R.id.rvMails);
-        recyclerView.setAdapter(new AdapterMails(listener, mails));
+        recyclerView.setAdapter(new AdapterMails(listener, mails, getActivity()));
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
     }
 

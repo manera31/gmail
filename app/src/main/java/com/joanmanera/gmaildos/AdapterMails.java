@@ -1,5 +1,9 @@
 package com.joanmanera.gmaildos;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,17 +26,19 @@ public class AdapterMails extends RecyclerView.Adapter<AdapterMails.MailsViewHol
 
     private IMailListener listener;
     private ArrayList<Mail> mails;
+    private Context context;
 
-    public AdapterMails(IMailListener listener, ArrayList<Mail> mails) {
+    public AdapterMails(IMailListener listener, ArrayList<Mail> mails, Context context) {
         this.listener = listener;
         this.mails = mails;
+        this.context = context;
     }
 
     @NonNull
     @Override
     public MailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_mail, parent, false);
-        return new MailsViewHolder(view, listener);
+        return new MailsViewHolder(view, listener, context);
     }
 
     @Override
@@ -54,9 +60,10 @@ public class AdapterMails extends RecyclerView.Adapter<AdapterMails.MailsViewHol
         private TextView tvDate;
         private TextView tvHour;
         private IMailListener listener;
+        private Context context;
 
 
-        public MailsViewHolder(@NonNull View itemView, IMailListener listener) {
+        public MailsViewHolder(@NonNull View itemView, IMailListener listener, Context context) {
             super(itemView);
             ivPhoto = itemView.findViewById(R.id.ivPhoto);
             tvName = itemView.findViewById(R.id.tvName);
@@ -65,15 +72,30 @@ public class AdapterMails extends RecyclerView.Adapter<AdapterMails.MailsViewHol
             tvDate = itemView.findViewById(R.id.tvDate);
             tvHour = itemView.findViewById(R.id.tvHour);
             this.listener = listener;
+
             itemView.setOnClickListener(this);
         }
 
+        @SuppressLint("ResourceAsColor")
         public void bindMail(Mail mail){
+            if (!mail.isReaded()){
+                tvName.setTypeface(null, Typeface.BOLD);
+                tvSubject.setTypeface(null, Typeface.BOLD);
+                tvDate.setTypeface(null, Typeface.BOLD);
+                tvDate.setTextColor(Color.BLUE);
+                tvHour.setTypeface(null, Typeface.BOLD);
+                tvHour.setTextColor(Color.BLUE);
+            }
             if(mail.getFrom() != null){
                 tvName.setText(mail.getFrom().getName());
+                String nombre = "c"+mail.getFrom().getPhoto();
+                int resId = context.getResources().getIdentifier(nombre, "drawable", context.getPackageName());
+                ivPhoto.setImageResource(resId);
             } else {
                 tvName.setText(mail.getUknowMail());
+                ivPhoto.setImageResource(R.drawable.unknown);
             }
+
             tvSubject.setText(mail.getSubject());
             tvBody.setText(mail.getBody());
             tvDate.setText(mail.getDate());
