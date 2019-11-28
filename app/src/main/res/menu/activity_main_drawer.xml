@@ -16,10 +16,7 @@
             android:id="@+id/nav_unread"
             android:icon="@drawable/sharp_star_black_18dp"
             android:title="No leídos"/>
-        <item
-            android:id="@+id/nav_send"
-            android:icon="@drawable/sharp_add_black_18dp"
-            android:title="Enviar"/>
+
     </group>
 
     <item android:title="Otras opciones">

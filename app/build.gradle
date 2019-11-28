@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.germangascon.navigationdrawersample"
+        applicationId "com.joanmanera.gmaildos"
         minSdkVersion 15
         targetSdkVersion 28
         versionCode 1

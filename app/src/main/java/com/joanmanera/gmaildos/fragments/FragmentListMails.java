@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.joanmanera.gmaildos.AdapterMails;
 import com.joanmanera.gmaildos.GmailParser;
 import com.joanmanera.gmaildos.IMailListener;
+import com.joanmanera.gmaildos.MainActivity;
 import com.joanmanera.gmaildos.R;
 import com.joanmanera.gmaildos.models.Account;
 import com.joanmanera.gmaildos.models.Contact;
@@ -27,13 +29,10 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class FragmentListMails extends Fragment {
-    private ArrayList<Mail> mails;
+    private Account account;
     private RecyclerView recyclerView;
     private IMailListener listener;
 
-    public FragmentListMails(ArrayList<Mail> mails) {
-        this.mails = mails;
-    }
 
     @Nullable
     @Override
@@ -44,8 +43,11 @@ public class FragmentListMails extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        if(getArguments() != null){
+            account = (Account) getArguments().getSerializable("ACCOUNT");
+        }
         recyclerView = getView().findViewById(R.id.rvMails);
-        recyclerView.setAdapter(new AdapterMails(listener, mails, getActivity()));
+        recyclerView.setAdapter(new AdapterMails(listener, account, getActivity()));
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
     }
 

@@ -8,12 +8,14 @@ public class Account implements Serializable {
     private String name;
     private String firstSurname;
     private String email;
+    private ArrayList<Mail> mails;
 
-    public Account(int id, String name, String firstSurname, String email) {
+    public Account(int id, String name, String firstSurname, String email, ArrayList<Mail> mails) {
         this.id = id;
         this.name = name;
         this.firstSurname = firstSurname;
         this.email = email;
+        this.mails = mails;
     }
 
 
@@ -31,6 +33,14 @@ public class Account implements Serializable {
 
     public String getEmail() {
         return email;
+    }
+
+    public ArrayList<Mail> getMails() {
+        return mails;
+    }
+
+    public void setMails(ArrayList<Mail> mails) {
+        this.mails = mails;
     }
 
     @Override

@@ -47,7 +47,6 @@ public class GmailParser {
             String firstSurname = objectAccount.getString("firstSurname");
             String email = objectAccount.getString("email");
 
-            account = new Account(id, name, firstSurname, email);
             contacts.add(new Contact(id, name, firstSurname, email));
 
             //CONTACTOS
@@ -111,11 +110,14 @@ public class GmailParser {
                         toContact = c;
                     }
                 }
-                if (!aux)
+                if (!aux) {
                     mails.add(new Mail(from, subject, body, sentOn, readed, deleted, spam));
+                } else {
+                    mails.add(new Mail(fromContact, toContact, subject, body, sentOn, readed, deleted, spam));
+                }
 
-                mails.add(new Mail(fromContact, toContact, subject, body, sentOn, readed, deleted, spam));
             }
+            account = new Account(id, name, firstSurname, email, mails);
             parsed = true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -132,7 +134,4 @@ public class GmailParser {
         return account;
     }
 
-    public ArrayList<Mail> getMails() {
-        return mails;
-    }
 }
