@@ -47,6 +47,7 @@ public class GmailParser {
             String firstSurname = objectAccount.getString("firstSurname");
             String email = objectAccount.getString("email");
 
+            account = new Account(id, name, firstSurname, email);
             contacts.add(new Contact(id, name, firstSurname, email));
 
             //CONTACTOS
@@ -117,7 +118,6 @@ public class GmailParser {
                 }
 
             }
-            account = new Account(id, name, firstSurname, email, mails);
             parsed = true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -134,4 +134,7 @@ public class GmailParser {
         return account;
     }
 
+    public ArrayList<Mail> getMails() {
+        return mails;
+    }
 }

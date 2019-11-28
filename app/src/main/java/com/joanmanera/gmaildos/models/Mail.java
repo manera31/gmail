@@ -27,7 +27,7 @@ public class Mail implements Serializable, Comparable<Mail> {
         this.subject = subject;
         this.body = body;
         this.date = convertDate(sentOn, new SimpleDateFormat("dd MMM"));
-        this.hour = convertDate(sentOn, new SimpleDateFormat("hh:mm"));
+        this.hour = convertDate(sentOn, new SimpleDateFormat("HH:mm"));
         this.readed = readed;
         this.deleted = deleted;
         this.spam = spam;
@@ -39,7 +39,7 @@ public class Mail implements Serializable, Comparable<Mail> {
         this.subject = subject;
         this.body = body;
         this.date = convertDate(sentOn, new SimpleDateFormat("dd MMM"));
-        this.hour = convertDate(sentOn, new SimpleDateFormat("hh:mm"));
+        this.hour = convertDate(sentOn, new SimpleDateFormat("HH:mm"));
         this.readed = readed;
         this.deleted = deleted;
         this.spam = spam;
@@ -50,7 +50,7 @@ public class Mail implements Serializable, Comparable<Mail> {
     private String convertDate(String sentOn, SimpleDateFormat sdf){
 
         try {
-            Date date = new SimpleDateFormat("yyyy-MM-dd hh:mm").parse(sentOn);
+            Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(sentOn);
             this.sentOn = date;
             return sdf.format(date);
         } catch (ParseException e) {

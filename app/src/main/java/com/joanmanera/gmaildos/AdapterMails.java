@@ -30,11 +30,13 @@ import java.util.Date;
 public class AdapterMails extends RecyclerView.Adapter<AdapterMails.MailsViewHolder> {
 
     private IMailListener listener;
+    private ArrayList<Mail> mails;
     private Account account;
     private Context context;
 
-    public AdapterMails(IMailListener listener, Account account, Context context) {
+    public AdapterMails(IMailListener listener, Account account, ArrayList<Mail> mails, Context context) {
         this.listener = listener;
+        this.mails = mails;
         this.account = account;
         this.context = context;
     }
@@ -48,13 +50,13 @@ public class AdapterMails extends RecyclerView.Adapter<AdapterMails.MailsViewHol
 
     @Override
     public void onBindViewHolder(@NonNull MailsViewHolder holder, int position) {
-        Mail mail = account.getMails().get(position);
+        Mail mail = mails.get(position);
         holder.bindMail(mail);
     }
 
     @Override
     public int getItemCount() {
-        return account.getMails().size();
+        return mails.size();
     }
 
     public static class MailsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{

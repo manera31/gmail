@@ -30,6 +30,7 @@ import java.util.ArrayList;
 
 public class FragmentListMails extends Fragment {
     private Account account;
+    private ArrayList<Mail> mails;
     private RecyclerView recyclerView;
     private IMailListener listener;
 
@@ -45,9 +46,10 @@ public class FragmentListMails extends Fragment {
         super.onActivityCreated(savedInstanceState);
         if(getArguments() != null){
             account = (Account) getArguments().getSerializable("ACCOUNT");
+            mails = (ArrayList<Mail>) getArguments().getSerializable("MAILS");
         }
         recyclerView = getView().findViewById(R.id.rvMails);
-        recyclerView.setAdapter(new AdapterMails(listener, account, getActivity()));
+        recyclerView.setAdapter(new AdapterMails(listener, account, mails, getActivity()));
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
     }
 

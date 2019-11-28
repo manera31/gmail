@@ -2,7 +2,6 @@ package com.joanmanera.gmaildos;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -25,7 +24,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.joanmanera.gmaildos.fragments.FragmentListMails;
 import com.joanmanera.gmaildos.fragments.FragmentSendMail;
 import com.joanmanera.gmaildos.models.Account;
@@ -33,7 +31,6 @@ import com.joanmanera.gmaildos.models.Mail;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, IMailListener {
@@ -54,15 +51,15 @@ public class MainActivity extends AppCompatActivity
         GmailParser parser = new GmailParser(this);
         if (parser.parse()) {
             account = parser.getAccount();
+            mails = parser.getMails();
 
         }
-        mails = account.getMails();
         loadMails();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab =findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -144,48 +141,6 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    /*@Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        FragmentListMails f;
-        // Se ha hecho click en algún item del NavigationView
-        int id = item.getItemId();
-
-        if (id == R.id.nav_recived) {
-            f = new FragmentListMails(mailsRecived, account);
-            f.setMailsListener(this);
-            mails = mailsRecived;
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, f).commit();
-            setTitle("Recived");
-        } else if (id == R.id.nav_sent) {
-            f = new FragmentListMails(mailsSent, account);
-            f.setMailsListener(this);
-            mails = mailsSent;
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, f).commit();
-            setTitle("Sent");
-        } else if (id == R.id.nav_unread) {
-            f = new FragmentListMails(mailsUnread, account);
-            f.setMailsListener(this);
-            mails = mailsUnread;
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, f).commit();
-            setTitle("Unread");
-        } else if (id == R.id.nav_spam) {
-            f = new FragmentListMails(mailsSpam, account);
-            f.setMailsListener(this);
-            mails = mailsSpam;
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, f).commit();
-            setTitle("Spam");
-        } else if (id == R.id.nav_trash) {
-            f = new FragmentListMails(mailsTrash, account);
-            f.setMailsListener(this);
-            mails = mailsTrash;
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, f).commit();
-            setTitle("Trash");
-        }
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }*/
    @Override
    public boolean onNavigationItemSelected(MenuItem item) {
        FragmentListMails f = new FragmentListMails();
@@ -193,24 +148,25 @@ public class MainActivity extends AppCompatActivity
 
        int id = item.getItemId();
        if (id == R.id.nav_recived) {
-           account.setMails(mailsRecived);
+           mails = mailsRecived;
            setTitle("Recibidos");
        } else if (id == R.id.nav_sent) {
-           account.setMails(mailsSent);
+           mails = mailsSent;
            setTitle("Enviados");
        } else if (id == R.id.nav_unread) {
-           account.setMails(mailsUnread);
+           mails = mailsUnread;
            setTitle("No leidos");
        } else if (id == R.id.nav_spam) {
-           account.setMails(mailsSpam);
+           mails = mailsSpam;
            setTitle("Spam");
        } else if (id == R.id.nav_trash) {
-           account.setMails(mailsTrash);
+           mails = mailsTrash;
            setTitle("Papelera");
        }
 
        Bundle bundleAccount = new Bundle();
        bundleAccount.putSerializable("ACCOUNT", account);
+       bundleAccount.putSerializable("MAILS", mails);
 
        f.setArguments(bundleAccount);
        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, f).commit();
@@ -229,8 +185,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void loadMails(){
-        Collections.sort(account.getMails());
-        mails = account.getMails();
+        Collections.sort(mails);
         mailsRecived = new ArrayList<>();
         mailsSent = new ArrayList<>();
         mailsSpam = new ArrayList<>();
@@ -239,9 +194,9 @@ public class MainActivity extends AppCompatActivity
         for (Mail m: mails){
             if (!m.isSpam() && !m.isDeleted() && !m.getFrom().getEmail().equals(account.getEmail()))
                 mailsRecived.add(m);
-            if (m.getFrom() != null && !m.getTo().getEmail().equals(account.getEmail()))
+            if (m.getFrom() != null && !m.isDeleted() && !m.getTo().getEmail().equals(account.getEmail()))
                 mailsSent.add(m);
-            if (!m.isReaded())
+            if (m.getFrom() != null && !m.isSpam() && !m.isDeleted() &&!m.isReaded() && !m.getFrom().getEmail().equals(account.getEmail()))
                 mailsUnread.add(m);
             if (m.isSpam())
                 mailsSpam.add(m);

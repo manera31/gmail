@@ -17,6 +17,7 @@ public class DetalleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalle);
         FragmentMail detalle = (FragmentMail)getSupportFragmentManager().findFragmentById(R.id.FragmentDetalle);
-        detalle.mostrarDetalle((Mail)getIntent().getSerializableExtra(EXTRA_TEXTO));
+        Mail m = (Mail)getIntent().getSerializableExtra(EXTRA_TEXTO);
+        detalle.mostrarDetalle(m);
     }
 }
