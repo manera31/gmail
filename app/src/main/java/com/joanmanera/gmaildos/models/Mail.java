@@ -103,6 +103,7 @@ public class Mail implements Serializable, Comparable<Mail> {
         return hour;
     }
 
+
     @Override
     public String toString() {
         return "Mail{" +
